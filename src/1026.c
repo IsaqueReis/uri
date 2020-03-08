@@ -2,11 +2,32 @@
 #include <stdlib.h>
 #include <string.h>
 #include <stdint.h>
+#include <math.h>
 
 #define MAX_NBYTE_SIZE 32
 
-//built-in strrev()
-void nimps_strrev(char *s)
+typedef unsigned long long ll;
+
+char carry = '@';
+
+char 
+binary_sum(char a, char b)
+{
+    if(a == '0' && b == '0')      
+        return '0';
+    else if(a == '1' && b == '0') 
+        return '1';
+    else if(b == '1' && a == '0') 
+        return '1';
+    else if(a == '1' && b == '1')
+    {
+        carry = '1';
+        return '0';
+    }
+}
+
+void 
+_strrev(char *s)
 {
     char aux = '@';
     for(int i = 0, len = strlen(s) - 1 ; i < len; i++, len--)
@@ -19,52 +40,50 @@ void nimps_strrev(char *s)
     return;
 } 
 
-void fill_bin_str(char bin[MAX_NBYTE_SIZE])
-{
-    int i = 0;
-    while(i < MAX_NBYTE_SIZE)
-    {
-        bin[i] = '0';
-        i++;
-    }
-    bin[i] = '\0';
-}
-
 void 
-get_bin_str(int n, char bin[MAX_NBYTE_SIZE])
+get_bin_str(ll n, char bin[MAX_NBYTE_SIZE+1])
 {
-    int valor = n;
-    int i = 0;
-    
-    fill_bin_str(bin);
+    ll value_copy = n;
 
-    while(valor > 0)
+    for(int i = 0; i < MAX_NBYTE_SIZE; i++)
     {
-        int tmp = valor % 2;
+        int tmp = value_copy % 2;
         if(tmp == 0)
             bin[i] = '0';
-        else
+        else 
             bin[i] = '1';
 
-        valor /= 2;
-        i++;
+        value_copy /= 2;
     }
+    _strrev(bin);
+    //printf("%s\n", bin);
+    return;
+}
 
-    nimps_strrev(bin);
+void perform_bin_sum(char a[MAX_NBYTE_SIZE+1], char b[MAX_NBYTE_SIZE+1], char out[MAX_NBYTE_SIZE+1])
+{
+    for(int i = 31; i >= 0; i--)
+        out[i] = binary_sum(a[i], b[i]);
+    //printf("%s\n", out);
     return;
 }
 
 int main(void)
 {
-    uint32_t a = 0, b = 0;
+    ll a = 0, b = 0;
 
-    while(scanf("%d %d", &a, &b) != EOF)
+    while(scanf("%llu %llu", &a, &b) != EOF)
     {
         getchar();
-        char bin_str_a[MAX_NBYTE_SIZE], bin_str_b[MAX_NBYTE_SIZE];
+        //printf("%llu %llu\n", a, b);
+
+        char bin_str_a[MAX_NBYTE_SIZE + 1] = {'\0'}, 
+             bin_str_b[MAX_NBYTE_SIZE + 1] = {'\0'},
+             out[MAX_NBYTE_SIZE + 1]       = {'\0'};
         get_bin_str(a, bin_str_a);
         get_bin_str(b, bin_str_b);
-        printf("%s %s\n", bin_str_a, bin_str_b);
+        perform_bin_sum(bin_str_a, bin_str_b, out);
+        printf("%llu\n", (ll) strtoull(out, NULL, 2));
     }
     
     return 0;
