@@ -1,0 +1,73 @@
+#include <stdio.h>
+
+void printArr(int len, int v[])
+{
+    for(int i = 0; i < len; i++)
+        printf("%d ", v[i]);
+    printf("\n");
+}//printArr
+
+int menorMovimento(int objetivo, int face)
+{
+    if(objetivo == face)
+        return 0;
+    if(objetivo == (7 - face))
+        return 2;
+    return 1;
+}
+
+int maiorValor(int len, int v[])
+{int maior = 0;
+ int posicao = 0;
+    for(int i = 0; i < len; i++)
+    {
+        if(v[i] > maior)
+        {
+            maior = v[i];
+            posicao = i;
+        }
+
+        if(v[i] == maior)
+        {
+            if(menorMovimento(posicao, i) < 2)
+            {
+                posicao = i;
+            }
+        }
+    }
+    return posicao;
+}//maiorValor
+
+int main(void)
+{int numeroDados = 0;
+ int contador = 0;
+    scanf("%d", &numeroDados);
+
+    int dados[numeroDados];
+    int frequencias[7] = {0};
+
+    int i = 0;
+    {
+        while(i < numeroDados)
+        {fflush(stdin);
+            scanf(" %d", &dados[i]);
+            i++;
+        }
+    }
+
+    //frequencia dos dados
+    for(int i = 0; i < numeroDados; i++)
+        frequencias[ dados[i] ]++;
+
+    int melhorMovimento = maiorValor(7, frequencias);
+
+    for(int i = 0; i < numeroDados; i++)
+    {
+        if(dados[i] == melhorMovimento)
+            continue;
+        else 
+            contador += menorMovimento(melhorMovimento, dados[i]);
+    }
+    printf("%d\n", contador);
+    return 0;
+}
