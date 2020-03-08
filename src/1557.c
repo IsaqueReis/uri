@@ -14,10 +14,6 @@ int nCasas(ll val)
     return count;
 }
 
-/*
-    https://youtu.be/qgVCDJCwFzU?t=1396
-*/
-
 void print(int ord, int casas, int mtz[][ord])
 {
 
